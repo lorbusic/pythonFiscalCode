@@ -1,27 +1,32 @@
+#import of modules 'comuni' and 'stati' to search the code of the city or of the state
 import comuni
 import stati
 
 class FiscalCode():
-    
+
+    #constructor    
     def __init__(self, name, surname, birthdate, birthcity, sex):
         self.__name=name
         self.__surname=surname
         self.__birthdate=birthdate
         self.__birthcity=birthcity
         self.__sex=sex
+        #array for the vowels
         self.__vowels=['a','e','i','o','u','A','E','I','O','U']
     
- 
+    #function to verify if the character is a vowel
     def isVowel(self, x):
         if self.__vowels.index(x) > -1 : return 1
         else: return 0
     
+    #function to count the consonants
     def countConsonants(self, x):
         c=0
         for s in x:
             if s not in self.__vowels: c+=1
         return c
 
+    #function to determine the 3 characters of the surname
     def extractSurname(self):
         s = self.__surname
         b = ""
@@ -38,6 +43,7 @@ class FiscalCode():
         if(c<=3): b+="x"
         return b.upper()
     
+    #function to determine the 3 characters of the name
     def extractName(self):
         s = self.__name
         b = ""
@@ -59,6 +65,7 @@ class FiscalCode():
         if(c<=3): b+="x"
         return b.upper()
     
+    #function to determine the 2 digits of birth year, the letter of the birth month and the 2 digits of the birth day
     def extractBirthdate(self):
         bd=self.__birthdate
         sp=bd.split("/") 
@@ -69,6 +76,7 @@ class FiscalCode():
         day=str(day)
         return str(year+""+month+""+day)
 
+    #function to determine the city code - it calls the array in 'stati' module or the array in 'comuni' module
     def extractBirthcity(self):
         v=0
         for a in comuni.comuniList: 
@@ -78,7 +86,8 @@ class FiscalCode():
                 break 
         if(v==0):
             return stati.states[self.__birthcity]["code"]
-            
+    
+    #function to determin the birth month letter
     def findMonthLetter(self,month):
         arr={
             '01': 'A',	
@@ -96,6 +105,7 @@ class FiscalCode():
         }
         return arr[month]
 
+    #function to convert the character in even positions
     def conversionEven(self,c): 
         arr={
             'A':0,
@@ -137,6 +147,7 @@ class FiscalCode():
         } 
         return arr[c]
     
+    #function to convert the character in odd positions
     def conversionOdd(self,c): 
         arr={
             'A':1,
@@ -178,6 +189,7 @@ class FiscalCode():
         } 
         return arr[c]
 
+    #function to do the sum of the relative numbers derivated by conversions (even and odd positions)
     def conversion(self):
         i=1
         total=0
@@ -191,19 +203,23 @@ class FiscalCode():
             total+=c 
         return total  
 
+    #function to compute the last character of the fiscal code
     def checkDigit(self):
         k = self.conversion()
         m = k % 26 
         arr=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
         return arr[m]  
 
+    #function to determine the final ouput
     def theOutput(self):
         return self.extractSurname()+self.extractName()+self.extractBirthdate()+self.extractBirthcity()+self.checkDigit()
 
-#EXAPLES
+#EXAMPLES
 fc=FiscalCode("Maria","Verdi","12/12/1991","Milano","F")
 print(fc.theOutput()) 
 fc2=FiscalCode("Mario","Rossi","10/10/1990","Roma","M")
 print(fc2.theOutput()) 
 fc3=FiscalCode("Marcella","Bianchi","10/10/1990","ALBANIA","F")
 print(fc3.theOutput()) 
+fc4=FiscalCode("Andrea","Amigos","10/10/1980","SPAGNA","M")
+print(fc4.theOutput()) 
